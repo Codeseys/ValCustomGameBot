@@ -11,6 +11,8 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 client = discord.Client()
 
+messageID = None
+
 
 @client.event
 async def on_ready():
@@ -19,6 +21,7 @@ async def on_ready():
 
 @client.event
 async def on_reaction_add(reaction, user):
+    global messageID
     print(str(reaction.emoji))
     if user != client.user:
         if str(reaction.emoji) == "<:valorant:718711817911664650>":
@@ -26,10 +29,12 @@ async def on_reaction_add(reaction, user):
             users = await reaction.users().flatten()
             await reaction.message.channel.send('<@{0}>'.format(user.id))
             print(users)
+            print(messageID.id)
 
 
 @ client.event
 async def on_message(message):
+    global messageID
     if message.content == "!help":
         color = discord.Color.purple()
         embed = discord.Embed(color=color, title="Help on BOT",
@@ -38,7 +43,8 @@ async def on_message(message):
         await message.channel.send(content=None, embed=embed)
     elif message.content.startswith('+'):
         # print(message.content)
-        await message.channel.send("Moving...")
+        messageID = await message.channel.send("Moving...")
+        print(messageID.id)
 
     elif message.content == "!logoff":
         await client.logout()
