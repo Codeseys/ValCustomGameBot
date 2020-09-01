@@ -5,6 +5,8 @@ from discord.ext import commands, tasks
 import time
 import asyncio
 import os
+import glob
+import base64
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,6 +19,15 @@ messageID = None
 @client.event
 async def on_ready():
     print('Logged on as {0}!'.format(client.user))
+
+
+@tasks.loop(seconds=1)
+async def change_avatar():
+    iconFiles = glob.glob("/icon/")
+    # await
+    print(iconFiles)
+    # client.edit(avatar = ,
+    # )
 
 
 @client.event
@@ -60,5 +71,5 @@ async def on_reaction_remove(reaction, user):
         if str(reaction.emoji) == "<:valorant:718711817911664650>":
             print("removed")
 
-
+change_avatar.start()
 client.run(TOKEN)
