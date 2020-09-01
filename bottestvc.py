@@ -22,13 +22,13 @@ async def on_reaction_add(reaction, user):
     print(str(reaction.emoji))
     if user != client.user:
         if str(reaction.emoji) == "<:valorant:718711817911664650>":
-            print(client.user)
+            print(client.user, user.name, user.id)
             users = await reaction.users().flatten()
-            await reaction.message.channel.send(random.choice(users))
+            await reaction.message.channel.send('<@{0}>'.format(user.id))
             print(users)
 
 
-@client.event
+@ client.event
 async def on_message(message):
     if message.content == "!help":
         color = discord.Color.purple()
