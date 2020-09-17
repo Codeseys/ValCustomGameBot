@@ -1,3 +1,4 @@
+ 
 import json
 import random
 import discord
@@ -14,20 +15,36 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 client = discord.Client()
 
 messageID = None
+iconFiles = None
+iconFilesidx = 0
+iconFilesnum = 0
 
 
 @client.event
 async def on_ready():
+    global iconFiles
+    global iconFilesidx
+    global iconFilesnum
     print('Logged on as {0}!'.format(client.user))
+    iconFiles = glob.glob("icon/*")
+    iconFilesnum = len(iconFiles)
+    iconFilesidx = 0
+    change_avatar.start()
 
 
-@tasks.loop(seconds=1)
+@tasks.loop(seconds=2)
 async def change_avatar():
-    iconFiles = glob.glob("/icon/")
-    # await
-    print(iconFiles)
-    # client.edit(avatar = ,
-    # )
+
+    global iconFiles
+    global iconFilesidx
+    global iconFilesnum
+    icon = iconFiles[iconFilesidx]
+    iconFilesidx = (iconFilesidx+1) % iconFilesnum
+    with open(icon, "rb") as image:
+        f = image.read()
+        b = bytearray(f)
+        await client.user.edit(avatar=b,)
+    print("changed to %s", icon)
 
 
 @client.event
@@ -71,5 +88,5 @@ async def on_reaction_remove(reaction, user):
         if str(reaction.emoji) == "<:valorant:718711817911664650>":
             print("removed")
 
-change_avatar.start()
+
 client.run(TOKEN)
