@@ -26,25 +26,25 @@ async def on_ready():
     global iconFilesidx
     global iconFilesnum
     print('Logged on as {0}!'.format(client.user))
-    iconFiles = glob.glob("icon/*")
-    iconFilesnum = len(iconFiles)
-    iconFilesidx = 0
-    change_avatar.start()
+    # iconFiles = glob.glob("icon/*")
+    # iconFilesnum = len(iconFiles)
+    # iconFilesidx = 0
+    # change_avatar.start()
 
 
-@tasks.loop(seconds=2)
-async def change_avatar():
+# @tasks.loop(seconds=2)
+# async def change_avatar():
 
-    global iconFiles
-    global iconFilesidx
-    global iconFilesnum
-    icon = iconFiles[iconFilesidx]
-    iconFilesidx = (iconFilesidx+1) % iconFilesnum
-    with open(icon, "rb") as image:
-        f = image.read()
-        b = bytearray(f)
-        await client.user.edit(avatar=b,)
-    print("changed to %s", icon)
+#     global iconFiles
+#     global iconFilesidx
+#     global iconFilesnum
+#     icon = iconFiles[iconFilesidx]
+#     iconFilesidx = (iconFilesidx+1) % iconFilesnum
+#     with open(icon, "rb") as image:
+#         f = image.read()
+#         b = bytearray(f)
+#         await client.user.edit(avatar=b,)
+#     print("changed to %s", icon)
 
 
 @client.event
@@ -58,8 +58,8 @@ async def on_reaction_add(reaction, user):
             users = await reaction.users().flatten()
             await reaction.message.channel.send('<@{0}>'.format(user.id))
             print(users)
-        # elif str(reaction.emoji) ==
-            print(messageID.id)
+        # elif str(reaction.emoji) == "<:Valorant:737828322444050442>":
+            print(reaction.emoji)
 
 
 @ client.event
@@ -76,7 +76,10 @@ async def on_message(message):
         await message.channel.send("Moving...")
 
         messageID = await message.channel.send("Moving...")
-        print(messageID.id)
+        print(messageID)
+        msg = await message.channel.fetch_message(messageID.id)#.add_reaction("<:Valorant:737828322444050442>")
+        print(msg)
+        await msg.add_reaction("<:Valorant:737828322444050442>")
 
     elif message.content == "!logoff":
         await client.logout()
